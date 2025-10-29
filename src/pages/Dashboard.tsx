@@ -1,44 +1,107 @@
-import { BarChart3, Send, Clock, Users, CheckCircle, AlertCircle } from "lucide-react";
+import { useState, useEffect } from "react";
+import { BarChart3, Send, CheckCircle, AlertCircle, XCircle, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
 
-export const Dashboard = () => {
-  const handleSendNow = () => {
-    toast.success("Sending emails now...", {
-      description: "Your bulk email campaign has been initiated!",
-    });
-    console.log("Send Now clicked");
+interface DashboardProps {
+  campaignId: string;
+}
+
+export const Dashboard = ({ campaignId }: DashboardProps) => {
+  const [campaign, setCampaign] = useState<any>(null);
+  const [sending, setSending] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    loadCampaignData();
+    
+    // Refresh data every 5 seconds while sending
+    const interval = setInterval(() => {
+      if (campaign?.status === "sending") {
+        loadCampaignData();
+      }
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, [campaignId, campaign?.status]);
+
+  const loadCampaignData = async () => {
+    try {
+      const { data, error } = await supabase
+        .from("email_campaigns")
+        .select("*")
+        .eq("id", campaignId)
+        .single();
+
+      if (error) throw error;
+      setCampaign(data);
+    } catch (error) {
+      console.error("Error loading campaign:", error);
+      toast.error("Failed to load campaign data");
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handleScheduleDaily = () => {
-    toast.success("Daily schedule created!", {
-      description: "Emails will be sent automatically every day at 9:00 AM",
-    });
-    console.log("Schedule Daily clicked");
+  const handleSendNow = async () => {
+    setSending(true);
+    try {
+      const { data, error } = await supabase.functions.invoke("send-bulk-emails", {
+        body: {
+          campaign_id: campaignId,
+          batch_size: 10,
+        },
+      });
+
+      if (error) throw error;
+
+      if (data.error) {
+        toast.error(data.error);
+      } else {
+        toast.success(`Batch complete! Sent: ${data.sent}, Failed: ${data.failed}`);
+        loadCampaignData();
+      }
+    } catch (error: any) {
+      console.error("Error sending emails:", error);
+      toast.error(error.message || "Failed to send emails");
+    } finally {
+      setSending(false);
+    }
   };
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-64">
+        <RefreshCw className="w-8 h-8 animate-spin text-primary" />
+      </div>
+    );
+  }
+
+  const pendingCount = campaign?.total_contacts - (campaign?.sent_count || 0) - (campaign?.failed_count || 0);
 
   const stats = [
     {
-      icon: Users,
-      label: "Total Recruiters",
-      value: "50",
-      color: "text-primary",
-      bgColor: "bg-primary/10",
-    },
-    {
       icon: CheckCircle,
-      label: "Sent Today",
-      value: "10",
+      label: "Sent Successfully",
+      value: campaign?.sent_count || 0,
       color: "text-success",
       bgColor: "bg-success/10",
     },
     {
       icon: AlertCircle,
       label: "Pending",
-      value: "40",
+      value: pendingCount || 0,
       color: "text-accent",
       bgColor: "bg-accent/10",
+    },
+    {
+      icon: XCircle,
+      label: "Failed",
+      value: campaign?.failed_count || 0,
+      color: "text-destructive",
+      bgColor: "bg-destructive/10",
     },
   ];
 
@@ -51,9 +114,9 @@ export const Dashboard = () => {
               <BarChart3 className="w-12 h-12 text-primary" />
             </div>
           </div>
-          <CardTitle className="text-3xl font-bold">Email Automation Dashboard</CardTitle>
+          <CardTitle className="text-3xl font-bold">{campaign?.name}</CardTitle>
           <CardDescription className="text-base mt-2">
-            Monitor your email campaigns and manage bulk sending
+            Monitor your email campaign progress
           </CardDescription>
         </CardHeader>
       </Card>
@@ -86,49 +149,44 @@ export const Dashboard = () => {
         <CardHeader>
           <CardTitle className="text-xl">Campaign Actions</CardTitle>
           <CardDescription>
-            Send your emails immediately or schedule them for daily delivery
+            Send emails in batches to manage your campaign effectively
           </CardDescription>
         </CardHeader>
-        <CardContent className="flex flex-col sm:flex-row gap-4">
+        <CardContent className="space-y-4">
           <Button
             onClick={handleSendNow}
             variant="gradient"
             size="lg"
-            className="flex-1"
+            className="w-full"
+            disabled={sending || pendingCount === 0}
           >
-            <Send className="mr-2" />
-            Send Now
+            {sending ? (
+              <>
+                <RefreshCw className="mr-2 animate-spin" />
+                Sending Batch...
+              </>
+            ) : (
+              <>
+                <Send className="mr-2" />
+                Send Next Batch (10 emails)
+              </>
+            )}
           </Button>
-          <Button
-            onClick={handleScheduleDaily}
-            variant="default"
-            size="lg"
-            className="flex-1"
-          >
-            <Clock className="mr-2" />
-            Schedule Daily
-          </Button>
-        </CardContent>
-      </Card>
+          
+          {pendingCount === 0 && campaign?.sent_count > 0 && (
+            <div className="p-4 bg-success/10 border border-success/20 rounded-lg text-center">
+              <CheckCircle className="w-8 h-8 text-success mx-auto mb-2" />
+              <p className="font-semibold text-success">Campaign Complete!</p>
+              <p className="text-sm text-muted-foreground mt-1">
+                All emails have been processed
+              </p>
+            </div>
+          )}
 
-      <Card className="shadow-card bg-muted/30 border-border/50">
-        <CardHeader>
-          <CardTitle className="text-lg">Recent Activity</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-3">
-            <div className="flex items-center gap-3 text-sm">
-              <CheckCircle className="w-4 h-4 text-success" />
-              <span className="text-muted-foreground">10 emails sent successfully today</span>
-            </div>
-            <div className="flex items-center gap-3 text-sm">
-              <AlertCircle className="w-4 h-4 text-accent" />
-              <span className="text-muted-foreground">40 emails pending in queue</span>
-            </div>
-            <div className="flex items-center gap-3 text-sm">
-              <Users className="w-4 h-4 text-primary" />
-              <span className="text-muted-foreground">50 total recruiters in database</span>
-            </div>
+          <div className="text-sm text-muted-foreground">
+            <p>• Emails are sent in batches of 10</p>
+            <p>• Click "Send Next Batch" to continue sending</p>
+            <p>• Make sure you've configured your email settings first</p>
           </div>
         </CardContent>
       </Card>
