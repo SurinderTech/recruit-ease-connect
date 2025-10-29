@@ -14,7 +14,155 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      email_campaigns: {
+        Row: {
+          body: string
+          created_at: string
+          failed_count: number | null
+          id: string
+          name: string
+          scheduled_at: string | null
+          sent_count: number | null
+          status: string | null
+          subject: string
+          total_contacts: number | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          body: string
+          created_at?: string
+          failed_count?: number | null
+          id?: string
+          name: string
+          scheduled_at?: string | null
+          sent_count?: number | null
+          status?: string | null
+          subject: string
+          total_contacts?: number | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          body?: string
+          created_at?: string
+          failed_count?: number | null
+          id?: string
+          name?: string
+          scheduled_at?: string | null
+          sent_count?: number | null
+          status?: string | null
+          subject?: string
+          total_contacts?: number | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      email_contacts: {
+        Row: {
+          campaign_id: string | null
+          company: string | null
+          created_at: string
+          email: string
+          error_message: string | null
+          id: string
+          name: string
+          role: string | null
+          sent_at: string | null
+          status: string | null
+          user_id: string
+        }
+        Insert: {
+          campaign_id?: string | null
+          company?: string | null
+          created_at?: string
+          email: string
+          error_message?: string | null
+          id?: string
+          name: string
+          role?: string | null
+          sent_at?: string | null
+          status?: string | null
+          user_id: string
+        }
+        Update: {
+          campaign_id?: string | null
+          company?: string | null
+          created_at?: string
+          email?: string
+          error_message?: string | null
+          id?: string
+          name?: string
+          role?: string | null
+          sent_at?: string | null
+          status?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "email_contacts_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "email_campaigns"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          created_at: string
+          email: string | null
+          full_name: string | null
+          id: string
+        }
+        Insert: {
+          created_at?: string
+          email?: string | null
+          full_name?: string | null
+          id: string
+        }
+        Update: {
+          created_at?: string
+          email?: string | null
+          full_name?: string | null
+          id?: string
+        }
+        Relationships: []
+      }
+      user_settings: {
+        Row: {
+          api_key: string | null
+          created_at: string
+          email_service_provider: string | null
+          from_email: string | null
+          from_name: string | null
+          id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          api_key?: string | null
+          created_at?: string
+          email_service_provider?: string | null
+          from_email?: string | null
+          from_name?: string | null
+          id?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          api_key?: string | null
+          created_at?: string
+          email_service_provider?: string | null
+          from_email?: string | null
+          from_name?: string | null
+          id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
