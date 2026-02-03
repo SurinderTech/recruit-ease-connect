@@ -61,6 +61,8 @@ User → Auth → Dashboard
  Send / Schedule Emails
         ↓
  Campaign Analytics
+```
+```
 📁 Project Structure (Simplified)
 src/
 ├── components/
@@ -71,6 +73,7 @@ src/
 ├── styles/
 ├── utils/
 └── index.css
+```
 ⚙️ Environment Setup
 # Install dependencies
 npm install
