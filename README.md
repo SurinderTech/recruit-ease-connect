@@ -74,9 +74,11 @@ src/
 ├── utils/
 └── index.css
 ```
-⚙️ Environment Setup
+
 # Install dependencies
+```
 npm install
+```
 
 # Start development server
 npm run dev
