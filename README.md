@@ -81,7 +81,9 @@ npm install
 ```
 
 # Start development server
+```
 npm run dev
+````
 🔐 Environment Variables
 VITE_APP_NAME=RecruitEase
 VITE_API_URL=your_api_endpoint
