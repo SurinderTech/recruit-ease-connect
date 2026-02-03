@@ -121,15 +121,3 @@ MIT License © 2026 RecruitEase
 ✨ Built with a product mindset, scalability in mind, and clean engineering practices.
 
 ---
-
-## 📂 IMPORTANT (Do this in your repo)
-
-Create a folder:
-```bash
-assets/
-Rename your screenshots like this:
-
-Screenshot (941).png → Screenshot-941.png
-Screenshot (942).png → Screenshot-942.png
-Screenshot (943).png → Screenshot-943.png
-Screenshot (944).png → Screenshot-944.png
