@@ -84,9 +84,15 @@ npm install
 ```
 npm run dev
 ````
-🔐 Environment Variables
+# 🔐 Environment Variables
+
+
 VITE_APP_NAME=RecruitEase
+
+
 VITE_API_URL=your_api_endpoint
+
+
 🚧 Current Status
 ✅ UI & Flow Completed
 ✅ Authentication Screens
@@ -94,7 +100,7 @@ VITE_API_URL=your_api_endpoint
 🟡 Email API Integration (Pluggable)
 🟡 Analytics Backend
 
-📌 Future Enhancements
+# 📌 Future Enhancements
 📈 Advanced analytics dashboard
 
 🤖 AI-generated email templates
