@@ -111,8 +111,7 @@ VITE_API_URL=your_api_endpoint
 
 👥 Team collaboration features
 
-🤝 Contributing
-Contributions are welcome.
+# Contributions are welcome.
 Please open an issue or submit a pull request with clear descriptions.
 
 📄 License
