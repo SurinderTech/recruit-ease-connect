@@ -94,10 +94,10 @@ VITE_API_URL=your_api_endpoint
 
 
 # 🚧 Current Status
-✅ UI & Flow Completed
-✅ Authentication Screens
-✅ Landing Page
-🟡 Email API Integration (Pluggable)
+✅ UI & Flow Completed <br>
+✅ Authentication Screens<br>
+✅ Landing Page<br>
+🟡 Email API Integration (Pluggable)<br>
 🟡 Analytics Backend
 
 # 📌 Future Enhancements
