@@ -30,7 +30,7 @@ RecruitEase Connect is a modern, production-ready recruitment outreach platform 
 ---
 
 ### ⭐ Why Choose RecruitEase
-<img src="">
+<img src="Screenshot (1140).png">
 
 ---
 
