@@ -20,12 +20,12 @@ RecruitEase Connect is a modern, production-ready recruitment outreach platform 
 ## 🖼️ Product Screenshots
 
 ### 🔐 Authentication (Signup / Login)
-![Auth Page](./assets/Screenshot-941.png)
+<img src="Screenshot (1138).png">
 
 ---
 
 ### 🏠 Landing Page – Hero Section
-![Hero Section](./assets/Screenshot-944.png)
+<img src="">
 
 ---
 
